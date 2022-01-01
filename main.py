@@ -2,80 +2,47 @@
 import PySimpleGUI as sg
 import pandas as pd
 
-element_height = 1
+ELEMENT_HEIGHT = 1
+ELEMENT_OFFSET = 3
 
-coins_found = [
-    [
-        sg.Text("Coinbase Statement (csv)"),
-        sg.In(size=(10,1), enable_events=True, key="-CSV FILE-"),
-        sg.FileBrowse(size=(6,1)),
-    ],
-    [
-        sg.Listbox(
-            values=[], enable_events=True, size=(40,15),
-            key="-FILE LIST-",
-            no_scrollbar = True,
-        )
-    ],
+sg.theme('dark grey 8')
+
+COINS_FOUND = [
+    [sg.Text("Coinbase Statement (csv)"),sg.In(size=(10,1), enable_events=True, key="-CSV FILE-"),sg.FileBrowse(size=(6,1)),],
+    [sg.Text(size=(20, ELEMENT_HEIGHT), text="Coins found in statement")],
+    [sg.Listbox(values=[], enable_events=True, size=(44,20),key="-FILE LIST-",no_scrollbar = True,)],
 ]
 
-column1 = [
-    [sg.Text(size=(20, element_height), text="Selected Coin:")],
-    [sg.Text(size=(20, element_height), text="Current Coin Value:")],
-    [sg.Text(size=(20, element_height), text="Total Without Fees:")],
-    [sg.Text(size=(20, element_height), text="Total Fees:")],
-    [sg.Text(size=(20, element_height), text="Total With Fees:")],
-    [sg.Text(size=(20, element_height), text="Total Coins Bought:")],
-    [sg.Text(size=(20, element_height), text="Cost Basis:")],
-    [sg.Text(size=(20, element_height), text="Total Up or Down:")],
+COLUMN_1 = [
+    [sg.Text(size=(20, ELEMENT_HEIGHT), text="Selected Coin:"), sg.Text(size=(20, ELEMENT_HEIGHT), enable_events=True, key="-SELECTED COIN-")],
+    #Buys
+    [sg.Text(size=(20, ELEMENT_HEIGHT), text="Buys")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Current Coin Value:"), sg.Input(size=(20, ELEMENT_HEIGHT), enable_events=True, key="-PRICE INPUT-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Bought w/o Fees:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-BUY WITHOUT FEES-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Buy Fees:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-BUY FEES-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Bought With Fees:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-BUY WITH FEES-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Coins Bought:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-BUY AMOUNT-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Buy Cost Basis:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-BUY COST BASIS-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Up or Down:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-UP OR DOWN-")],
 
-    [sg.Text(size=(20, element_height), text="")],
-    # [sg.HSeparator],
-
-    [sg.Text(size=(20, element_height), text="Portfolio:")],
-    [sg.Text(size=(20, element_height), text="Total Bought Without Fees:")],
-    [sg.Text(size=(20, element_height), text="Total Fees:")],
-    [sg.Text(size=(20, element_height), text="Total Sold:")],
-    [sg.Text(size=(20, element_height), text="Total Value:")],
-
-]
-
-column2 = [
-    [sg.Text(size=(20, element_height), enable_events=True, key="-SELECTED COIN-")],
-    [sg.Input(size=(20, element_height), enable_events=True, key="-PRICE INPUT-")],
-    [sg.Text(size=(20, element_height), key="-WITHOUT FEES-")],
-    [sg.Text(size=(20, element_height), key="-FEES-")],
-    [sg.Text(size=(20, element_height), key="-WITH FEES-")],
-    [sg.Text(size=(20, element_height), key="-AMOUNT-")],
-    [sg.Text(size=(20, element_height), key="-WEIGHTED AVERAGE-")],
-    [sg.Text(size=(20, element_height), key="-UP OR DOWN")],
-
-    [sg.Text(size=(20, element_height), text="")],
-    # [sg.HSeparator()],
-    [sg.Text(size=(20, element_height), text="")],
-    [sg.Text(size=(20, element_height), key="-TOTAL WITHOUT FEES-")],
-    [sg.Text(size=(20, element_height), key="-TOTAL FEES-")],
-    [sg.Text(size=(20, element_height), key="-TOTAL SOLD-")],
-    [sg.Text(size=(20, element_height), key="-TOTAL VALUE-")],
+    #Sells
+    [sg.Text(size=(20, ELEMENT_HEIGHT), text="Sells")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Sold w/o Fees:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-SELL WITHOUT FEES-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Sell Fees:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-SELL FEES-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Sold With Fees:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-SELL WITH FEES-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Total Coins Sold:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-SELL AMOUNT-")],
+    [sg.Text(size=(ELEMENT_OFFSET, ELEMENT_HEIGHT), text=""), sg.Text(size=(20, ELEMENT_HEIGHT), text="Sell Cost Basis:"), sg.Text(size=(20, ELEMENT_HEIGHT), key="-SELL COST BASIS-")],
 ]
 
 layout =  [
     [
-        sg.Column(coins_found),
+        sg.Column(COINS_FOUND, key='-COINS FOUND-'),
         sg.VSeparator(),
-        sg.Column(column1),
-        sg.Column(column2),
+        sg.Column(COLUMN_1),
     ]
 ]
 
-window = sg.Window("Coinbase Statement Analyzer", layout, text_justification='left', resizable=True, keep_on_top=True)
-
-sum_without_fees = 0
-sum_fees = 0
-sum_with_fees = 0
-sum_amount = 0
-sum_amount_price = 0
-weighted_average = 0
+window = sg.Window("Coinbase Statement Analyzer", layout, text_justification='left', element_padding=(2, 2), keep_on_top=True)
 
 while True:
     event, values = window.read()
@@ -86,100 +53,96 @@ while True:
         filename = open(values["-CSV FILE-"])
         data = pd.read_csv(filename)
         coins = data['size unit']
-        unique = coins.unique()
-        window["-FILE LIST-"].update(unique)
-
-        total_bought_without_fees = []
-        fees = []
-        total_bought_with_fees = []
-        total_sold = []
-        total_up_or_down = []
-
-        #Get all the fees for buying and selling
-        for idx, row in enumerate(data.iloc):
-            fees.append(abs(row['fee']))
-
-        sum_fees = sum(fees)
-
-        # Get all the fees for buying and selling
-        for idx, row in enumerate(data.iloc):
-            if row['side'] == "BUY":
-                total_bought_without_fees.append(abs(row['total']))
-
-        sum_total_without_fees = sum(total_bought_without_fees)
-
-        # Get all the fees for buying and selling
-        for idx, row in enumerate(data.iloc):
-            if row['side'] == "SELL":
-                total_sold.append(abs(row['total']))
-
-        sum_total_sold = sum(total_sold)
-
-        window["-TOTAL WITHOUT FEES-"].update(sum_total_without_fees)
-        window["-TOTAL FEES-"].update(sum_fees)
-        window["-TOTAL SOLD-"].update(sum_total_sold)
-        window["-TOTAL VALUE-"].update(sum_total_without_fees - sum_total_sold)
+        unique_coins = coins.unique()
+        window["-FILE LIST-"].update(unique_coins)
 
     elif event == "-FILE LIST-":
         try:
-
-            without_fees = []
-            fees = []
-            with_fees = []
-            amount = []
-            coin_price = []
-            amount_price = []
+            buy_without_fees = []
+            buy_fees = []
+            buy_with_fees = []
+            buy_amount = []
+            buy_coin_price = []
+            buy_amount_price = []
 
             selected = values["-FILE LIST-"]
             window["-SELECTED COIN-"].update(selected)
 
-            # Basically none of this is working
-            # coin = data[data['product'] == selected]
-            # print(selected)
-            # print(data)
-            # coin_buy = coin[data['side'] == 'BUY']
-            # coin_df = pd.DataFrame({'size': coin['size'], 'price': coin['price']})
-            # coin_df["size*price"] = coin_df["size"] * coin_df["price"]
-            # print(coin_df)
-            # total_coin_cost = coin_df["price"].sum()
-            # total_coin_owned = coin_df["amount"].sum()
-            # total_coin_amount_price = coin_df["amount*price"].sum()
-            # average_coin_cost_bought_at = total_coin_amount_price / total_coin_owned
-
-            # Everything below works....
+            #Buys
+            sum_without_fees = 0
+            sum_fees = 0
+            sum_with_fees = 0
+            sum_amount = 0
+            sum_amount_price = 0
+            weighted_average = 0
             for idx, row in enumerate(data.iloc):
                 str_selected = str(selected)
                 if row['size unit'] in str_selected:
                    if row['side'] == "BUY":
-                       without_fees.append(abs(row['total']))
-                       fees.append(abs(row['fee']))
-                       with_fees.append(abs(row['total']) + abs(row['fee']))
-                       amount.append(abs(row['size']))
-                       amount_price.append(abs(row['size'])*abs(row['price']))
+                       buy_without_fees.append(abs(row['total']) - abs(row['fee']))
+                       buy_fees.append(abs(row['fee']))
+                       buy_with_fees.append(abs(row['total']))
+                       buy_amount.append(abs(row['size']))
+                       buy_amount_price.append(abs(row['size'])*abs(row['price']))
+
+            if len(buy_amount) == 0:
+                window["-BUY WITHOUT FEES-"].update("No buys found")
+                window["-BUY FEES-"].update("No buys found")
+                window["-BUY WITH FEES-"].update("No buys found")
+                window["-BUY AMOUNT-"].update("No buys found")
+                window["-BUY COST BASIS-"].update("No buys found")
+            else:
+                sum_without_fees = sum(buy_without_fees)
+                sum_fees = sum(buy_fees)
+                sum_with_fees = sum(buy_with_fees)
+                sum_amount = sum(buy_amount)
+                sum_amount_price = sum(buy_amount_price)
+
+                window["-BUY WITHOUT FEES-"].update(round(sum_without_fees, 3))
+                window["-BUY FEES-"].update(round(sum_fees, 3))
+                window["-BUY WITH FEES-"].update(round(sum_with_fees, 3))
+                window["-BUY AMOUNT-"].update(round(sum_amount, 3))
+                window["-BUY COST BASIS-"].update(round((sum_amount_price/sum_amount), 3))
 
 
-            sum_without_fees = sum(without_fees)
-            sum_fees = sum(fees)
-            sum_with_fees = sum(with_fees)
-            sum_amount = sum(amount)
-            sum_amount_price = sum(amount_price)
-            weighted_average = sum_amount_price/sum_amount
+            #Sells
+            sell_without_fees = []
+            sell_fees = []
+            sell_with_fees = []
+            sell_amount = []
+            sell_coin_price = []
+            sell_amount_price = []
+            for idx, row in enumerate(data.iloc):
+                str_selected = str(selected)
+                if row['size unit'] in str_selected:
+                    if row['side'] == "SELL":
+                        sell_without_fees.append(abs(row['total']) + abs(row['fee']))
+                        sell_fees.append(abs(row['fee']))
+                        sell_with_fees.append(abs(row['total']))
+                        sell_amount.append(abs(row['size']))
+                        sell_amount_price.append(abs(row['size']) * abs(row['price']))
 
-            print(sum_without_fees)
-            print(sum_fees)
-            print(sum_with_fees)
-            print(sum_amount)
-            print(sum_amount_price)
-            print(weighted_average)
+            if len(sell_amount) == 0:
+                window["-SELL WITHOUT FEES-"].update("No sells found")
+                window["-SELL FEES-"].update("No sells found")
+                window["-SELL WITH FEES-"].update("No sells found")
+                window["-SELL AMOUNT-"].update("No sells found")
+                window["-SELL COST BASIS-"].update("No sells found")
+            else:
+                sum_without_fees = sum(sell_without_fees)
+                sum_fees = sum(sell_fees)
+                sum_with_fees = sum(sell_with_fees)
+                sum_amount = sum(sell_amount)
+                sum_amount_price = sum(sell_amount_price)
 
-            window["-WITHOUT FEES-"].update(sum_without_fees)
-            window["-FEES-"].update(sum_fees)
-            window["-WITH FEES-"].update(sum_with_fees)
-            window["-AMOUNT-"].update(sum_amount)
-            window["-WEIGHTED AVERAGE-"].update(weighted_average)
+                window["-SELL WITHOUT FEES-"].update(round(sum_without_fees, 3))
+                window["-SELL FEES-"].update(round(sum_fees, 3))
+                window["-SELL WITH FEES-"].update(round(sum_with_fees, 3))
+                window["-SELL AMOUNT-"].update(round(sum_amount, 3))
+                window["-SELL COST BASIS-"].update(round((sum_amount_price / sum_amount), 3))
 
-        except:
-            pass
+        except ValueError:
+            print(ValueError)
 
 
     elif event == "-PRICE INPUT-":
@@ -197,7 +160,7 @@ while True:
         amount_up_or_down = (float(number_price) * sum_amount) - sum_with_fees
         print(amount_up_or_down)
 
-        window["-UP OR DOWN-"].update(amount_up_or_down)
+        window["-UP OR DOWN-"].update(round(amount_up_or_down))
 
 window.close()
 
